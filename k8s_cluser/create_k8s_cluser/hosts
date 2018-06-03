@@ -1,0 +1,5 @@
+[all]
+node1 ansible_host=192.168.38.128 ansible_user=root ip=192.168.1.128
+node2 ansible_host=192.168.38.130 ansible_user=root ip=192.168.1.130
+node3 ansible_host=192.168.38.131 ansible_user=root ip=192.168.1.131
+

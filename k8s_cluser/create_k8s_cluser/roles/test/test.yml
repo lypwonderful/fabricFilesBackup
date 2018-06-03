@@ -1,0 +1,2 @@
+- name: run for test file
+  shell: ls `pwd`
