@@ -1,0 +1,152 @@
+模块化：
+	可插拔订购服务就交易顺序达成共识，然后将块广播给同行。
+	可插入成员资格服务提供商负责将网络中的实体与加密身份相关联。
+	可选的点对点八卦服务通过向其他同伴订购服务来传播块输出。
+	智能合约（“chaincode”）在容器环境（例如Docker）中运行以进行隔离。 它们可以用标准编程语言编写，但不能直接访问分类帐状态。
+	分类账可以配置为支持各种DBMS。
+	可插入的认可和验证策略实施，可以针对每个应用程序独立配置。
+
+可行区块链：
+
+另一方面，许可区块链在一组已知的，经过鉴定并经常审核的参与者之间进行区块链操作，该参与者在产生一定程度信任的治理模型下运行。 经过许可的区块链提供了一种方法来保护具有共同目标但不完全相互信任的一组实体之间的交互。 通过依赖参与者的身份，许可的区块链可以使用更传统的碰撞容错（CFT）或拜占庭容错（BFT）共识协议，这些协议不需要昂贵的挖掘。
+此外，在这种许可的情况下，参与者通过智能合约故意引入恶意代码的风险会降低。 首先，与会者彼此了解，无论是提交应用交易，修改网络配置还是部署智能合约，所有行为都将记录在为网络和相关交易类型建立的认可政策之后的区块链中。 根据治理模式的条款，可以很容易地识别犯罪党并处理事件，而不是完全匿名。
+
+public key infrastructure 
+
+数字证书
+公钥和私钥
+证书颁发机构
+证书吊销列表
+
+
+Endorsement-背书
+指特定的peer节点执行事务并向生成事务提案的客户端应用程序响应YES/NO的过程。链码应用程序具有相应的背书策略，其中指定了需要背书的peer节点。
+
+
+Channel-通道
+一个通道是一个私有的块链，它允许数据隔离和保密。通道特定的分类帐在通道中的peer之间共享，并且交易方必须进行适当的身份验证，以便与通道进行交互。通道由配置块定义 。
+
+Hyperledger Fabric CA
+Hyperledger Fabric CA是默认的证书颁发机构组件，它向网络成员组织及其用户颁发基于PKI的证书。CA向每个授权用户向每个成员颁发一个根证书（rootCert）以及向每一个认证的用户颁发一个注册证书（ECert）。
+
+Transaction  它一条request，用来在ledger上执行一个function，这个function是用chaincode来实现的
+
+
+详细的教程：https://www.cnblogs.com/aberic/p/7527831.htmla
+
+https://github.com/hyperledger/blockchain-explorer
+
+
+
+
+
+//===============================
+替换ali yum wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo 
+setenforce 0
+disabled
+
+
+安装docke https://yq.aliyun.com/articles/110806?spm=5176.8351553.0.0.49c11991O2fHqZ
+	sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+	# Step 2: 添加软件源信息
+	sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
+	# Step 3: 更新并安装 Docker-CE
+	sudo yum makecache fast
+	sudo yum -y install docker-ce
+
+安装golang 
+	https://studygolang.com/dl
+
+docker-compose 安装
+	yum install -y epel-release
+	yum install -y python-pip
+	pip install docker-compose
+
+
+升级内核
+	查看当前系统内核版本 uname -r
+	1. 导入key
+	rpm --import https://www.elrepo.org/RPM-GPG-KEY-elrepo.org
+	2. 安装 elrepo 的yum源
+	rpm -Uvh http://www.elrepo.org/elrepo-release-7.0-2.el7.elrepo.noarch.rpm
+	3. 安装内核
+	在yum的elrepo源中，有最新版本内核。直接yum安装即可。
+	yum --enablerepo=elrepo-kernel install kernel-ml-devel kernel-ml -y
+	5. 设置系统启动顺序
+	查看系统启动项：
+	cat /boot/grub2/grub.cfg |grep menuentry
+	可以发现有最新版本的内核，此时可以设置最新版本内核为默认启动：
+	grub2-set-default 'CentOS Linux (4.16.13-1.el7.elrepo.x86_64) 7 (Core)'
+	此时，查看默认启动的系统版本grub2-editenv list：
+	显示为'CentOS Linux (4.16.13-1.el7.elrepo.x86_64) 7 (Core)'
+	6. reboot，重启之后再次查看 uname -r
+
+快速删除dockers 容器
+docker rm -f $(docker ps -aq)
+
+安装postgrapsql 
+https://www.cnblogs.com/think8848/p/5877076.html
+
+
+单节点安装fabric
+
+1.下载源码
+go get github.com/hyperledger/fabric
+下载相关镜像
+
+
+#!/bin/bash
+set -e
+
+# docker pull
+docker pull hyperledger/fabric-tools:x86_64-1.1.0
+docker pull hyperledger/fabric-orderer:x86_64-1.1.0
+docker pull hyperledger/fabric-peer:x86_64-1.1.0
+docker pull hyperledger/fabric-couchdb:x86_64-1.1.0-preview
+docker pull hyperledger/fabric-zookeeper:x86_64-1.1.0-preview
+docker pull hyperledger/fabric-javaenv:x86_64-1.1.0-preview
+
+docker pull hyperledger/fabric-kafka:x86_64-1.1.0-preview
+docker pull hyperledger/fabric-ca:x86_64-1.1.0
+docker pull hyperledger/fabric-ccenv:x86_64-1.1.0
+docker pull hyperledger/fabric-baseimage:latest
+docker pull hyperledger/fabric-baseos:latest
+docker pull hyperledger/fabric-membersrvc:latest
+
+# docker tag
+docker tag hyperledger/fabric-tools:x86_64-1.1.0 hyperledger/fabric-tools:latest
+docker tag hyperledger/fabric-orderer:x86_64-1.1.0 hyperledger/fabric-orderer:latest
+docker tag hyperledger/fabric-peer:x86_64-1.1.0 hyperledger/fabric-peer:latest
+docker tag hyperledger/fabric-couchdb:x86_64-1.1.0-preview hyperledger/fabric-couchdb:latest
+docker tag hyperledger/fabric-zookeeper:x86_64-1.1.0-preview hyperledger/fabric-zookeeper:latest
+docker tag hyperledger/fabric-javaenv:x86_64-1.1.0-preview hyperledger/fabric-javaenv:latest
+
+docker tag hyperledger/fabric-kafka:x86_64-1.1.0-preview hyperledger/fabric-kafka:latest
+docker tag hyperledger/fabric-ca:x86_64-1.1.0 hyperledger/fabric-ca:latest
+docker tag hyperledger/fabric-ccenv:x86_64-1.1.0 hyperledger/fabric-ccenv:latest
+
+
+# docker rmi
+docker rmi hyperledger/fabric-tools:x86_64-1.1.0 -f
+docker rmi hyperledger/fabric-orderer:x86_64-1.1.0 -f
+docker rmi hyperledger/fabric-peer:x86_64-1.1.0 -f
+docker rmi hyperledger/fabric-couchdb:x86_64-1.1.0-preview -f
+docker rmi hyperledger/fabric-zookeeper:x86_64-1.1.0-preview -f
+docker rmi hyperledger/fabric-javaenv:x86_64-1.1.0-preview -f
+
+docker rmi hyperledger/fabric-kafka:x86_64-1.1.0-preview -f
+docker rmi hyperledger/fabric-ca:x86_64-1.1.0 -f
+docker rmi hyperledger/fabric-ccenv:x86_64-1.1.0 -f
+
+
+
+
+
+fabric expoer
+http://www.lijiaocn.com/项目/2018/04/26/hyperledger-explorer.html
+
+
+ansible 免密码
+4.在deploy节点配置免密码登陆
+ssh-keygen -t rsa -b 2048 回车 回车 回车
+ssh-copy-id $IPs #$IPs为所有节点地址包括自身，按照提示输入yes 和root密码
